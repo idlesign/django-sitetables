@@ -44,8 +44,17 @@ Next create page template ``entries.html``:
 
     <script type="text/javascript">
          $(function() {
-             <!-- Initialize table using generated config. -->
-             $('#table-entries').dataTable({% sitetable_config table_entries %});
+             <!-- Initialize table using generated config.
+                  The following demonstrates how you can extend generated
+                  configuration. -->
+             $('#table-entries').dataTable($.extend({},
+                 {% sitetable_config table_entries %},
+                 {
+                     pagingType: 'full_numbers',
+                     lengthChange: false,
+                 }
+             ));
+
          });
      </script>
 
