@@ -5,7 +5,24 @@ from sitetables.plugins.style.bootstrap3 import Bootstrap3Plugin
 from sitetables.plugins.style.bootstrap4 import Bootstrap4Plugin
 from sitetables.plugins.style.foundation import FoundationPlugin
 from sitetables.plugins.style.semantic import SemanticPlugin
+from sitetables.plugins.style.jqueryui import JqueryUiPlugin
 from sitetables.toolbox import Table
+
+
+def test_jqueryui(source_listdics):
+
+    table = Table(
+        source=source_listdics,
+        plugins=[
+            JqueryUiPlugin(),
+        ]
+    )
+
+    assert len(table.get_assets_css()) == 2
+
+    js = table.get_assets_js()
+    assert len(js) == 2
+    assert 'jqueryui.' in js[1]
 
 
 def test_semantic(source_listdics):
