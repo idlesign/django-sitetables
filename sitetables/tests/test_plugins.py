@@ -1,8 +1,59 @@
 from django.utils.translation import activate, deactivate_all
 
 from sitetables.plugins.i18n import I18nPlugin
+from sitetables.plugins.style.bootstrap3 import Bootstrap3Plugin
 from sitetables.plugins.style.bootstrap4 import Bootstrap4Plugin
+from sitetables.plugins.style.foundation import FoundationPlugin
+from sitetables.plugins.style.semantic import SemanticPlugin
 from sitetables.toolbox import Table
+
+
+def test_semantic(source_listdics):
+
+    table = Table(
+        source=source_listdics,
+        plugins=[
+            SemanticPlugin(),
+        ]
+    )
+
+    assert len(table.get_assets_css()) == 2
+
+    js = table.get_assets_js()
+    assert len(js) == 2
+    assert 'semanticui.' in js[1]
+
+
+def test_foundation(source_listdics):
+
+    table = Table(
+        source=source_listdics,
+        plugins=[
+            FoundationPlugin(),
+        ]
+    )
+
+    assert len(table.get_assets_css()) == 2
+
+    js = table.get_assets_js()
+    assert len(js) == 2
+    assert 'foundation.' in js[1]
+
+
+def test_bootstrap3(source_listdics):
+
+    table = Table(
+        source=source_listdics,
+        plugins=[
+            Bootstrap3Plugin(),
+        ]
+    )
+
+    assert len(table.get_assets_css()) == 2
+
+    js = table.get_assets_js()
+    assert len(js) == 2
+    assert 'bootstrap.' in js[1]
 
 
 def test_bootstrap4(source_listdics):
@@ -15,7 +66,10 @@ def test_bootstrap4(source_listdics):
     )
 
     assert len(table.get_assets_css()) == 2
-    assert len(table.get_assets_js()) == 2
+
+    js = table.get_assets_js()
+    assert len(js) == 2
+    assert 'bootstrap4.' in js[1]
 
 
 def test_i18n(source_listdics, settings):

@@ -15,7 +15,7 @@ First place table definition into ``views.py``:
 
 
     def entries(request):
-        # We create table from entries queryset,
+        # We create client-side handled table from entries queryset,
         table_entries = Table(
             source=Entries.objects.filter(hidden=False),
             # We also activate some plugins.
