@@ -29,7 +29,7 @@ def test_source_listdicts(source_listdics):
     assert len(rows) == 2
     assert rows[0]['one'] == 'a'
     assert rows[1]['two'] == 'e'
-    assert table.source.row_id == 'one'
+    assert table.source.row_id in ('one', 'two')
 
 
 def test_source_model(setup_articles):
