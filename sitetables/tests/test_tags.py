@@ -83,3 +83,5 @@ def test_config(render, source_listdics):
     assert '"data":' in rendered
     assert '"name": "one"' in rendered
     assert '"one": "a"' in rendered
+    assert "function" in rendered
+    assert '"function' not in rendered

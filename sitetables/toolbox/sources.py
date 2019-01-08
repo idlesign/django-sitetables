@@ -11,7 +11,7 @@ class TableSource:
 
     def __init__(self, source, options=None):
         self.columns = OrderedDict()
-        self.row_id = 'DT_RowId'  # todo may clash among tables of one page
+        self.row_id = 'DT_RowId'
         self.options = options or {}
         self._rows = []
         self._bootstrap(source)
@@ -39,7 +39,9 @@ class TableSource:
 
         """
         config.update({
-            'rowId': self.row_id,
+            'createdRow': lambda: (
+                "function(row, data, idx){var v=data['%s']; if (v){$(row).attr('data-id', v);}}" % self.row_id),
+
             'processing': True,
             'columns': [column.as_dict() for column in self.columns.values()],
         })
