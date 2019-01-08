@@ -22,16 +22,21 @@ class Table:
         ],
     }
 
-    def __init__(self, source=None, plugins=None):
+    def __init__(self, source=None, plugins=None, name=None):
         """
         :param dict|list|Model|QuerySet source: Table data source.
+
         :param list[TablePlugin] plugins: A list of plugins.
+
+        :param str name: Table name (alias) to differentiate among
+            different tables. If not set, default will be used.
 
         """
         self.source = None
         self.set_source(source)
         self.plugins = plugins or []
         self.url_base = URL_CDN_BASE
+        self.name = name or 'table'
 
         # todo options argument maybe as a class?
 
