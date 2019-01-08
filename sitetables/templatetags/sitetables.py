@@ -1,11 +1,11 @@
-from json import dumps
-
 from django import template
 from django.template import TemplateSyntaxError
 from django.utils.safestring import SafeText
 
+from ..toolbox.utils import dump_js
+
 if False:  # pragma: nocover
-    from ..sitetable import Table
+    from ..toolbox import Table
 
 
 register = template.Library()
@@ -63,7 +63,7 @@ def sitetable_config(table):
     :param Table table:
     :rtype: str
     """
-    return dumps(table.get_config())
+    return dump_js(table.get_config())
 
 
 @sitetable_tag
