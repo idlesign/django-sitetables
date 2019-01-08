@@ -126,7 +126,7 @@ class ModelSource(TableSource):
         self.model = model
         self.qs = qs
 
-        self.row_id = 'pk'
+        self.row_id = opts.pk.name
 
     @property
     def rows(self):

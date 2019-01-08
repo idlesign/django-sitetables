@@ -29,6 +29,7 @@ def test_source_listdicts(source_listdics):
     assert len(rows) == 2
     assert rows[0]['one'] == 'a'
     assert rows[1]['two'] == 'e'
+    assert table.source.row_id == 'one'
 
 
 def test_source_model(setup_articles):
@@ -44,6 +45,7 @@ def test_source_model(setup_articles):
     rows = list(table.get_rows())
 
     assert len(rows) == 5
+    assert table.source.row_id == 'id'
 
 
 def test_source_query_set(setup_articles):
@@ -64,4 +66,6 @@ def test_source_query_set(setup_articles):
     article.hidden = True
     article.save()
 
-    assert len(Table(source).get_rows()) == 5  # Still 5 due to filtering
+    table = Table(source)
+    assert len(table.get_rows()) == 5  # Still 5 due to filtering
+    assert table.source.row_id == 'id'
