@@ -67,7 +67,7 @@ Next create page template ``entries.html``:
 
     <!-- The following resides in body tag. Note that in this scenario
          thead and tbody will be populated using JS automatically. -->
-    <table id="table-entries"><thead></thead><tbody></tbody></table>
+    <table id="table-entries"></table>
 
     <script type="text/javascript">
          $(function() {
