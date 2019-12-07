@@ -2,7 +2,7 @@ django-sitetables
 =================
 https://github.com/idlesign/django-sitetables
 
-|release| |lic| |ci| |coverage| |health|
+|release| |lic| |ci| |coverage|
 
 .. |release| image:: https://img.shields.io/pypi/v/django-sitetables.svg
     :target: https://pypi.python.org/pypi/django-sitetables
@@ -15,10 +15,6 @@ https://github.com/idlesign/django-sitetables
 
 .. |coverage| image:: https://img.shields.io/coveralls/idlesign/django-sitetables/master.svg
     :target: https://coveralls.io/r/idlesign/django-sitetables
-
-.. |health| image:: https://landscape.io/github/idlesign/django-sitetables/master/landscape.svg?style=flat
-    :target: https://landscape.io/github/idlesign/django-sitetables/master
-
 
 
 **Work in progress. Stay tuned.**
