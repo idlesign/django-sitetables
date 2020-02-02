@@ -1,6 +1,11 @@
+from typing import Optional
+
 from django.utils.translation import get_language
 
 from .base import TablePlugin
+
+if False:  # pragma: nocover
+    from ..toolbox import Table
 
 
 LANGS = {
@@ -81,13 +86,14 @@ LANGS = {
 class I18nPlugin(TablePlugin):
     """Internationalization plugin."""
 
-    def __init__(self, lang_code=None):
+    def __init__(self, lang_code: Optional[str] = None):
         """
-        :param str lang_code: Language code (usually two-letter). E.g.: ru, de
+        :param lang_code: Language code (usually two-letter). E.g.: ru, de
+
         """
         self.lang = lang_code
 
-    def contribute_to_config(self, config, table):
+    def contribute_to_config(self, config: dict, table: 'Table'):
         super().contribute_to_config(config, table)
 
         code = self.lang

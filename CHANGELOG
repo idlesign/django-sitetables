@@ -2,6 +2,11 @@ django-sitetables changelog
 ===========================
 
 
+Unreleased
+----------
+! Dropped support for Python < 3.6.
+
+
 v0.1.0
 ------
 + Basic functionality.

@@ -1,18 +1,29 @@
+from typing import Any
+
 from .utils import contribute_to_dict
 
 
 class TableColumn:
     """Represents a table column."""
 
-    def __init__(self, name, title=None, source=None, sort=None, search=None, default=None, css=None):
+    def __init__(
+            self,
+            name: str,
+            title: str = None,
+            source: Any = None,
+            sort: bool = None,
+            search: bool = None,
+            default: str = None,
+            css: str = None
+    ):
         """
-        :param str name: Column name (alias).
-        :param str title: Column title.
+        :param name: Column name (alias).
+        :param title: Column title.
         :param source: Column source object
-        :param bool sort: Flag to toggle sorting.
-        :param bool search: Flag to toggle searching.
-        :param str default: Value to be used if no data available.
-        :param str css: CSS class for the column.
+        :param sort: Flag to toggle sorting.
+        :param search: Flag to toggle searching.
+        :param default: Value to be used if no data available.
+        :param css: CSS class for the column.
 
         """
         self.name = name
@@ -25,11 +36,9 @@ class TableColumn:
 
         # todo decide on `render` js
 
-    def as_dict(self):
-        """Represents the column as a dictionary.
+    def as_dict(self) -> dict:
+        """Represents the column as a dictionary."""
 
-        :rtype: dict
-        """
         name = self.name
 
         result = {

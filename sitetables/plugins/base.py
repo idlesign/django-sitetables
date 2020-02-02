@@ -1,6 +1,6 @@
 
 if False:  # pragma: nocover
-    from ..sitetable import Table
+    from ..toolbox.tables import Table
 
 
 class TablePlugin:
@@ -21,11 +21,11 @@ class TablePlugin:
     
     """
 
-    def contribute_to_config(self, config, table):
+    def contribute_to_config(self, config: dict, table: 'Table'):
         """Allows updating base table configuration dictionary with
         values from plugin specific.
 
-        :param dict config:
-        :param Table table:
+        :param config:
+        :param table:
 
         """

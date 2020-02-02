@@ -1,6 +1,8 @@
+from typing import List, Optional
+
 from django.db.models import Model, QuerySet
 
-from .sources import ModelSource, ListDictsSource
+from .sources import ModelSource, ListDictsSource, TypeTableSource
 from ..exceptions import SiteTablesException
 from ..settings import URL_CDN_BASE
 
@@ -22,13 +24,18 @@ class Table:
         ],
     }
 
-    def __init__(self, source=None, plugins=None, name=None):
+    def __init__(
+            self,
+            source: Optional[TypeTableSource] = None,
+            plugins: Optional[List['TablePlugin']] = None,
+            name: str = None
+    ):
         """
-        :param dict|list|Model|QuerySet source: Table data source.
+        :param source: Table data source.
 
-        :param list[TablePlugin] plugins: A list of plugins.
+        :param plugins: A list of plugins.
 
-        :param str name: Table name (alias) to differentiate among
+        :param name: Table name (alias) to differentiate among
             different tables. If not set, default will be used.
 
         """
@@ -40,16 +47,17 @@ class Table:
 
         # todo options argument maybe as a class?
 
-    def set_source(self, source):
+    def set_source(self, source: TypeTableSource):
         """Sets a data source for this table.
 
-        :param dict|list|Model|QuerySet source: Table data source.
+        :param source: Table data source.
 
         """
         if source is None:
             return None
 
         params = {}
+
         if isinstance(source, dict):
             params = source
             source = source['source']
@@ -61,15 +69,13 @@ class Table:
             source_cls = ModelSource
 
         else:
-            raise SiteTablesException('Unsupported data source type: %s' % type(source))
+            raise SiteTablesException(f'Unsupported data source type: {type(source)}')
 
         self.source = source_cls.spawn(source, params)
 
-    def get_config(self):
-        """Returns a table configuration dictionary including params from plugins.
+    def get_config(self) -> dict:
+        """Returns a table configuration dictionary including params from plugins."""
 
-        :rtype: dict
-        """
         source = self.source
 
         config = {}
@@ -81,44 +87,34 @@ class Table:
 
         return config
 
-    def get_columns(self):
-        """Returns columns dictionary from data source.
+    def get_columns(self) -> dict:
+        """Returns columns dictionary from data source."""
 
-        :rtype: OrderedDict
-        """
         return self.source.columns
 
-    def get_rows(self):
-        """Returns table rows from data source.
+    def get_rows(self) -> List[dict]:
+        """Returns table rows from data source."""
 
-        :rtype: list[dict]
-
-        """
         return self.source.rows
 
     @property
-    def url_version(self):
-        """Base URL for current DataTables version.
+    def url_version(self) -> str:
+        """Base URL for current DataTables version."""
 
-        :rtype: str
-        """
         return self.url_base + self.version + '/'
 
     @property
-    def url_plugins(self):
-        """Base URL for plugins for current DataTables version.
+    def url_plugins(self) -> str:
+        """Base URL for plugins for current DataTables version."""
 
-        :rtype: str
-        """
         return self.url_base + 'plug-ins/' + self.version + '/'
 
-    def get_assets(self, typename, enclosure):
+    def get_assets(self, typename: str, enclosure: str) -> List[str]:
         """Returns a list of assets inclusion directives with their URLs.
 
-        :param str typename: Assets type name. E.g.: js, css.
-        :param str enclosure: Pattern to place URL into.
+        :param typename: Assets type name. E.g.: js, css.
+        :param enclosure: Pattern to place URL into.
 
-        :rtype: list
         """
         # todo checksum origin support
 
@@ -137,16 +133,12 @@ class Table:
 
         return assets
 
-    def get_assets_js(self):
-        """Returns a list of HTML directives to include JS relevant for table and plugins.
+    def get_assets_js(self) -> List[str]:
+        """Returns a list of HTML directives to include JS relevant for table and plugins."""
 
-        :rtype: list
-        """
         return self.get_assets('js', '<script src="%(url)s"></script>')
 
-    def get_assets_css(self):
-        """Returns a list of HTML directives to include CSS relevant for table and plugins.
+    def get_assets_css(self) -> List[str]:
+        """Returns a list of HTML directives to include CSS relevant for table and plugins."""
 
-        :rtype: list
-        """
         return self.get_assets('css', '<link rel="stylesheet" href="%(url)s">')
