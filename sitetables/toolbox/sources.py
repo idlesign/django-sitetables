@@ -1,5 +1,5 @@
 from itertools import chain
-from typing import Optional, List, Union, Dict
+from typing import Optional, List, Union, Dict, Type
 
 from django.db.models import QuerySet, Model
 
@@ -10,10 +10,16 @@ if False:  # pragma: nocover
 
 
 TypeTableSource = Union[Dict, List[Dict], Model, QuerySet]
+TypeTableColumns = Dict[str, TableColumn]
 
 
 class TableSource:
     """Base data source for tables."""
+
+    columns: TypeTableColumns
+
+    custom_columns: Dict[str, str] = None
+    """User defined columns: model property name mapped to its title."""
 
     def __init__(self, source, options: Optional[dict] = None):
         self.columns = {}
@@ -33,8 +39,20 @@ class TableSource:
         source_obj = cls(source, options=params.get('options'))
         return source_obj
 
+    def _get_columns(self) -> TypeTableColumns:
+        """Should return columns dictionary."""
+        columns = {}
+
+        custom_columns = self.custom_columns or {}
+
+        for name, title in custom_columns.items():
+            columns[name] = TableColumn(name=name, title=title)
+
+        return columns
+
     def _bootstrap(self, source: TypeTableSource):
         """The place for a source-specific bootstrap."""
+        self.columns = self._get_columns()
 
     def contribute_to_config(self, config: dict, table: 'Table'):
         """Updates table configuration dictionary with source-specific params.
@@ -83,17 +101,14 @@ class ListDictsSource(TableSource):
 
     """
     def _bootstrap(self, source: List[dict]):
-        super()._bootstrap(source)
-
-        columns = self.columns
 
         names = list(source[0].keys())
-
-        for name in names:
-            columns[name] = TableColumn(name=name)
+        self.custom_columns = dict.fromkeys(names, '')
 
         self._rows = source
         self.row_id = names[0]  # Use first column value.
+
+        super()._bootstrap(source)
 
 
 class ModelSource(TableSource):
@@ -105,10 +120,22 @@ class ModelSource(TableSource):
         source = Article.objects.filter(hidden=False)  # Or a QuerySet.
 
     """
-    def _bootstrap(self, source: Union[Model, QuerySet]):
-        super()._bootstrap(source)
+    model: Type[Model] = None
 
-        columns = self.columns
+    def _get_columns(self) -> TypeTableColumns:
+        columns = {}
+
+        meta = self.model._meta
+
+        for field in chain(meta.concrete_fields, meta.private_fields, meta.many_to_many):
+            name = field.name
+            columns[name] = TableColumn(name=name, title=field.verbose_name, source=field)
+
+        columns.update(super()._get_columns())
+
+        return columns
+
+    def _bootstrap(self, source: Union[Type[Model], QuerySet]):
 
         if isinstance(source, QuerySet):
             model = source.model
@@ -119,16 +146,11 @@ class ModelSource(TableSource):
             model = source
             qs = model.objects.all()
 
-        opts = model._meta
-
-        for field in chain(opts.concrete_fields, opts.private_fields, opts.many_to_many):
-            name = field.name
-            columns[name] = TableColumn(name=name, title=field.verbose_name, source=field)
-
         self.model = model
         self.qs = qs
+        self.row_id = model._meta.pk.name
 
-        self.row_id = opts.pk.name
+        super()._bootstrap(source)
 
     @property
     def rows(self) -> List[dict]:
