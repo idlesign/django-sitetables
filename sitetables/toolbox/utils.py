@@ -1,5 +1,4 @@
 import json
-from typing import List, Tuple, Any
 
 
 class JsEncoder(json.JSONEncoder):
@@ -19,13 +18,15 @@ def dump_js(obj: dict) -> str:
     return json.dumps(obj, cls=JsEncoder).replace('"<--', '').replace('-->"', '')
 
 
-def contribute_to_dict(tuples: List[Tuple[str, Any]], to: dict):
+def contribute_to_dict(items: dict, to: dict):
     """Updates target dict using data from tuples.
 
-    :param tuples: List of (key, value) tuples.
+    :param items: List of (key, value) tuples.
     :param to: Target dict.
 
     """
-    for name, value in tuples:
-        if value is not None:
-            to[name] = value
+    to.update({
+        name: value
+        for name, value in items.items()
+        if value is not None
+    })

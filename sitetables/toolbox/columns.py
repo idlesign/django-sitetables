@@ -44,14 +44,14 @@ class TableColumn:
         result = {
             'data': name,
             'name': name,
-            'title': '%s' % self.title,
+            'title': f'{self.title}',
         }
 
-        contribute_to_dict([
-            ('sortable', self.sort),
-            ('searchable', self.search),
-            ('defaultContent', self.default),
-            ('className', self.css),
-        ], to=result)
+        contribute_to_dict({
+            'sortable': self.sort,
+            'searchable': self.search,
+            'defaultContent': self.default,
+            'className': self.css,
+        }, to=result)
 
         return result
