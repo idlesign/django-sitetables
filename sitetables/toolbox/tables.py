@@ -1,4 +1,6 @@
-from typing import List, Optional
+from typing import List, Optional, Dict
+from uuid import uuid4
+from weakref import WeakValueDictionary
 
 from django.db.models import Model, QuerySet
 
@@ -24,6 +26,9 @@ class Table:
         ],
     }
 
+    tables_registry: Dict[str, 'Table'] = WeakValueDictionary()
+    """Known table instances."""
+
     def __init__(
             self,
             source: Optional[TypeTableSource] = None,
@@ -43,7 +48,11 @@ class Table:
         self.set_source(source)
         self.plugins = plugins or []
         self.url_base = URL_CDN_BASE
-        self.name = name or 'table'
+
+        name = name or f'table-{uuid4()}'
+        self.name = name
+
+        self.__class__.tables_registry[name] = self
 
         # todo options argument maybe as a class?
 
