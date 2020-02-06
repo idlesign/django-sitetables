@@ -1,19 +1,33 @@
-from typing import Tuple
+from typing import Tuple, Union
 
 from django import template
 from django.template import TemplateSyntaxError
 from django.utils.safestring import SafeText
 
 from ..toolbox.utils import dump_js
-
-if False:  # pragma: nocover
-    from ..toolbox import Table
+from ..toolbox import Table
 
 
 register = template.Library()
 
+TypeTableDef = Union[Table, str]
 
-def get_asset(attrname: str, tables: Tuple['Table', ...]):
+
+def resolve_table(table_def: TypeTableDef):
+
+    if isinstance(table_def, str):
+        try:
+            return Table.tables_registry[table_def]
+
+        except KeyError:
+            raise TemplateSyntaxError(
+                f'Sitetable with alias `{table_def}` is not found. '
+                f"Registered tables: {','.join(Table.tables_registry.keys())}.")
+
+    return table_def
+
+
+def get_asset(attrname: str, tables: Tuple[TypeTableDef, ...]):
 
     assets = {}
 
@@ -22,6 +36,7 @@ def get_asset(attrname: str, tables: Tuple['Table', ...]):
         if not table:
             continue
 
+        table = resolve_table(table)
         func_get_asset = getattr(table, attrname, None)
 
         if func_get_asset is None:
@@ -37,36 +52,30 @@ def sitetable_tag(func):
 
     func_name = func.__name__
 
-    def sitetable_tag_(table):
-
-        if isinstance(table, str):
-            raise TemplateSyntaxError(
-                f'`{func_name}` template tag expects sitetable object. '
-                f'`{type(table)}` is given instead')
-
+    def sitetable_tag_(table: TypeTableDef):
+        table = resolve_table(table)
         return SafeText(func(table))
 
     return register.simple_tag(sitetable_tag_, name=func_name)
 
 
 @register.simple_tag()
-def sitetables_js(*args: 'Table') -> str:
+def sitetables_js(*args: TypeTableDef) -> str:
     return get_asset('get_assets_js', args)
 
 
 @register.simple_tag()
-def sitetables_css(*args: 'Table') -> str:
+def sitetables_css(*args: TypeTableDef) -> str:
     return get_asset('get_assets_css', args)
 
 
 @sitetable_tag
-def sitetable_config(table: 'Table') -> str:
+def sitetable_config(table: Table) -> str:
     return dump_js(table.get_config())
 
 
 @sitetable_tag
-def sitetable_head(table: 'Table') -> str:
-
+def sitetable_head(table: Table) -> str:
     if not table.source.options.get('init_dom'):
         return ''
 
@@ -78,8 +87,7 @@ def sitetable_head(table: 'Table') -> str:
 
 
 @sitetable_tag
-def sitetable_rows(table: 'Table') -> str:
-
+def sitetable_rows(table: Table) -> str:
     if not table.source.options.get('init_dom'):
         return ''
 
