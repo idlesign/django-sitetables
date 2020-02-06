@@ -74,7 +74,7 @@ def test_sitetable_tag(template_render_tag, source_listdics):
     with pytest.raises(TemplateSyntaxError):
         template_render_tag('sitetables', 'sitetable_config table')
 
-    table = Table(source_listdics, name='mytable')
+    Table(source_listdics, name='mytable')
     template_render_tag('sitetables', 'sitetable_config table', context={'table': 'mytable'})
 
 

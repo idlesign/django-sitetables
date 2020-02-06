@@ -29,6 +29,8 @@ class Table:
     tables_registry: Dict[str, 'Table'] = WeakValueDictionary()
     """Known table instances."""
 
+    __tables_kept = []
+
     def __init__(
             self,
             source: Optional[TypeTableSource] = None,
@@ -49,10 +51,18 @@ class Table:
         self.plugins = plugins or []
         self.url_base = URL_CDN_BASE
 
-        name = name or f'table-{uuid4()}'
+        cls = self.__class__
+
+        if name:
+            # Keep named tables alive in weakrefdict.
+            cls.__tables_kept.append(self)
+
+        else:
+            name = f'table-{uuid4()}'
+
         self.name = name
 
-        self.__class__.tables_registry[name] = self
+        cls.tables_registry[name] = self
 
         # todo options argument maybe as a class?
 
