@@ -17,7 +17,7 @@ if False:  # pragma: nocover
 class Table:
     """Represents a sitetable."""
 
-    version = '1.10.19'
+    version = '1.10.20'
 
     assets = {
         'js': [
