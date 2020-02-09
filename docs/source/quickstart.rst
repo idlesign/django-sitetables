@@ -61,3 +61,28 @@ Next create page template ``entries.html``:
     <!-- The following line usually goes somewhere near the end of the body.
          It'll load all needed js. -->
     {% sitetables_js table_entries %}
+
+
+Serverside tables
+~~~~~~~~~~~~~~~~~
+
+You can instruct ``sitetables`` to not to pour all table data to client, but
+to fetch it from server when needed. For that pass ``on_server=True`` to ``Table``:
+
+.. code-block:: python
+
+    table_entries = Table(source=Entries, on_server=True)
+
+
+Addressing tables by name
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+One may not spawn a table for each request, but create named table and address it by its name:
+
+.. code-block:: python
+
+    ENTRIES_TABLE_NAME = 'entries'
+    Table(source=Entries, name=ENTRIES_TABLE_NAME)
+
+    def entries(request):
+        return render(request, 'entries.html', {'table_entries': ENTRIES_TABLE_NAME})

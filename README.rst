@@ -17,9 +17,6 @@ https://github.com/idlesign/django-sitetables
     :target: https://coveralls.io/r/idlesign/django-sitetables
 
 
-**Work in progress. Stay tuned.**
-
-
 Description
 -----------
 
@@ -28,6 +25,7 @@ Description
 **Offers:**
 
 * Various data sources support: models, query sets, list of dicts.
+* Serverside tables support.
 * ``DataTables`` plugins support: styling, internationalization, etc.
 * Template tags for easy js and css inclusion.
 * Template tags for DOM-based tables.
