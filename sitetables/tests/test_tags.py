@@ -2,6 +2,7 @@ import pytest
 from django.template import TemplateSyntaxError
 
 from sitetables.plugins.style.bootstrap4 import Bootstrap4Plugin
+from sitetables.tests.testapp.models import Article
 from sitetables.toolbox import Table
 
 
@@ -88,3 +89,7 @@ def test_config(render, source_listdics):
     assert '"one": "a"' in rendered
     assert "function" in rendered
     assert '"function' not in rendered
+
+    table = Table(source=Article, on_server=True)
+    rendered = render(table, tag='sitetable_config')
+    assert '"url": "/sitetables/responder/"' in rendered

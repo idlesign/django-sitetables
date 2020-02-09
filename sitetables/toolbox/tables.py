@@ -1,8 +1,10 @@
+from gettext import gettext
 from typing import List, Optional, Dict
 from uuid import uuid4
 from weakref import WeakValueDictionary
 
 from django.db.models import Model, QuerySet
+from django.http import HttpRequest, JsonResponse
 
 from .sources import ModelSource, ListDictsSource, TypeTableSource
 from ..exceptions import SiteTablesException
@@ -34,7 +36,9 @@ class Table:
     def __init__(
             self,
             source: Optional[TypeTableSource] = None,
+            *,
             plugins: Optional[List['TablePlugin']] = None,
+            on_server: bool = False,
             name: str = None
     ):
         """
@@ -42,11 +46,15 @@ class Table:
 
         :param plugins: A list of plugins.
 
+        :param on_server: Do not pour all table data to a client at once,
+            but issue requests to a server to get data.
+
         :param name: Table name (alias) to differentiate among
             different tables. If not set, default will be used.
 
         """
         self.source = None
+        self.on_server = on_server
         self.set_source(source)
         self.plugins = plugins or []
         self.url_base = URL_CDN_BASE
@@ -78,8 +86,11 @@ class Table:
         params = {}
 
         if isinstance(source, dict):
-            params = source
+            params.update(source)
             source = source['source']
+
+        options = params.setdefault('options', {})
+        options['on_server'] = self.on_server
 
         if isinstance(source, list):
             source_cls = ListDictsSource
@@ -161,3 +172,20 @@ class Table:
         """Returns a list of HTML directives to include CSS relevant for table and plugins."""
 
         return self.get_assets('css', '<link rel="stylesheet" href="%(url)s">')
+
+    @classmethod
+    def respond(cls, request: HttpRequest) -> JsonResponse:
+        """Responds to a serverside sitetable request.
+
+        :param request:
+
+        """
+        table_name = request.POST.get('tableName', '')
+        table = Table.tables_registry.get(table_name)
+
+        if not table:
+            return JsonResponse({
+                'error': gettext('No data found for "%(table)s" table') % {'table': table_name},
+            }, status=400)
+
+        return table.source.respond(request)

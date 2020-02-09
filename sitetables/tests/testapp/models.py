@@ -8,3 +8,7 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def title_custom(self):
+        return f'custom_{self.title}'

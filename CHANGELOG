@@ -5,6 +5,7 @@ django-sitetables changelog
 Unreleased
 ----------
 ! Dropped support for Python < 3.6.
++ Added basic serverside tables support.
 
 
 v0.1.0
