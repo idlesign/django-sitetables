@@ -6,4 +6,4 @@ VERSION_STR = '.'.join(map(str, VERSION))
 """Application version number string."""
 
 
-default_app_config = 'sitetables.config.SitetablesConfig'
+default_app_config = 'sitetables.apps.SitetablesConfig'
