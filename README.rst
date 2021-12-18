@@ -2,16 +2,13 @@ django-sitetables
 =================
 https://github.com/idlesign/django-sitetables
 
-|release| |lic| |ci| |coverage|
+|release| |lic| |coverage|
 
 .. |release| image:: https://img.shields.io/pypi/v/django-sitetables.svg
     :target: https://pypi.python.org/pypi/django-sitetables
 
 .. |lic| image:: https://img.shields.io/pypi/l/django-sitetables.svg
     :target: https://pypi.python.org/pypi/django-sitetables
-
-.. |ci| image:: https://img.shields.io/travis/idlesign/django-sitetables/master.svg
-    :target: https://travis-ci.org/idlesign/django-sitetables
 
 .. |coverage| image:: https://img.shields.io/coveralls/idlesign/django-sitetables/master.svg
     :target: https://coveralls.io/r/idlesign/django-sitetables
