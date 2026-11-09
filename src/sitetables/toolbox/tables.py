@@ -1,5 +1,5 @@
 from gettext import gettext
-from typing import List, Optional, Dict
+from typing import List, Dict
 from uuid import uuid4
 from weakref import WeakValueDictionary
 
@@ -35,9 +35,9 @@ class Table:
 
     def __init__(
             self,
-            source: Optional[TypeTableSource] = None,
+            source: TypeTableSource | None = None,
             *,
-            plugins: Optional[List['TablePlugin']] = None,
+            plugins: List['TablePlugin'] | None = None,
             on_server: bool = False,
             name: str = None
     ):
@@ -95,7 +95,7 @@ class Table:
         if isinstance(source, list):
             source_cls = ListDictsSource
 
-        elif isinstance(source, QuerySet) or (type(source) == type(Model)):
+        elif isinstance(source, QuerySet) or isinstance(source, type(Model)):
             source_cls = ModelSource
 
         else:
@@ -153,8 +153,7 @@ class Table:
         url_asset_base = self.url_version + typename + '/'
 
         def contribute_assets(src):
-            for asset in src.assets.get(typename, []):
-                assets.append(enclosure % {'url': url_asset_base + asset})
+            assets.extend(enclosure % {'url': url_asset_base + asset} for asset in src.assets.get(typename, []))
 
         contribute_assets(self)
 

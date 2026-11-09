@@ -1,9 +1,4 @@
-
-VERSION = (0, 2, 1)
-"""Application version number tuple."""
-
-VERSION_STR = '.'.join(map(str, VERSION))
-"""Application version number string."""
+VERSION = "0.2.1"
 
 
 default_app_config = 'sitetables.apps.SitetablesConfig'

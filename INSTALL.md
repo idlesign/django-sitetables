@@ -1,31 +1,25 @@
-django-sitetables installation
-==============================
+# django-sitetables installation
 
+Python `pip` package is required to install `django-sitetables`.
 
-Python ``pip`` package is required to install ``django-sitetables``.
+## From sources
 
+Use the following command line to install `django-sitetables` from sources directory (containing `pyproject.toml`):
 
-From sources
-------------
+```shell
+pip install .
+```
 
-Use the following command line to install ``django-sitetables`` from sources directory (containing setup.py):
+## From PyPI
 
-    pip install .
+Alternatively you can install `django-sitetables` from PyPI:
 
-or
-
-    python setup.py install
-
-
-From PyPI
----------
-
-Alternatively you can install ``django-sitetables`` from PyPI:
-
-    pip install django-sitetables
-
+```shell
+pip install django-sitetables
+```
 
 Use `-U` flag for upgrade:
 
-    pip install -U django-sitetables
-
+```shell
+pip install -U django-sitetables
+```

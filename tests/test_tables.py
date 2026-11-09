@@ -9,3 +9,4 @@ def test_tables_registry(source_listdics):
     registry = Table.tables_registry
     assert len(list(registry.keys())) == 2
     assert registry['one'] is table1
+    assert registry[table2.name] is table2

@@ -1,4 +1,3 @@
-from typing import Optional
 
 from django.utils.translation import get_language
 
@@ -27,7 +26,7 @@ LANGS = {
     'cs': 'Czech',
     'da': 'Danish',
     'nl': 'Dutch',
-    # 'en': 'English',  # this on is built-in
+    # 'en' is built-in, hence missing in this mapping.
     'et': 'Estonian',
     'fil': 'Filipino',  # no two-letter code
     'fi': 'Finnish',
@@ -86,7 +85,7 @@ LANGS = {
 class I18nPlugin(TablePlugin):
     """Internationalization plugin."""
 
-    def __init__(self, lang_code: Optional[str] = None):
+    def __init__(self, lang_code: str | None = None):
         """
         :param lang_code: Language code (usually two-letter). E.g.: ru, de
 

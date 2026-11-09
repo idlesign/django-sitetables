@@ -1,20 +1,16 @@
-django-sitetables changelog
-===========================
+# django-sitetables changelog
 
+### v0.2.1 [2021-12-18]
 
-v0.2.1 [2021-12-18]
--------------------
-* Django 4.0 compatibility improved.
+* ** Django 4.0 compatibility improved.
 
+### v0.2.0 [2020-02-09]
 
-v0.2.0 [2020-02-09]
--------------------
-! Dropped support for Django < 2.0.
-! Dropped support for Python < 3.6.
-+ Added basic serverside tables support.
-+ Now uses DataTables 1.10.20 by default.
+* !! Dropped support for Django < 2.0.
+* !! Dropped support for Python < 3.6.
+* ++ Added basic serverside tables support.
+* ++ Now uses DataTables 1.10.20 by default.
 
+### v0.1.0
 
-v0.1.0
-------
-+ Basic functionality.
+* ++ Basic functionality.

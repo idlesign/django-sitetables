@@ -1,4 +1,4 @@
-from sitetables.tests.testapp.models import Article
+from tests.testapp.models import Article
 from sitetables.toolbox import Table
 
 

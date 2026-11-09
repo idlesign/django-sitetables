@@ -2,11 +2,11 @@ import pytest
 from django.template import TemplateSyntaxError
 
 from sitetables.plugins.style.bootstrap4 import Bootstrap4Plugin
-from sitetables.tests.testapp.models import Article
+from tests.testapp.models import Article
 from sitetables.toolbox import Table
 
 
-@pytest.fixture()
+@pytest.fixture
 def render(template_render_tag, template_context):
 
     def render_(table, tag):

@@ -1,21 +1,12 @@
-django-sitetables
-=================
-https://github.com/idlesign/django-sitetables
+# django-sitetables
 
-|release| |lic| |coverage|
+<https://github.com/idlesign/django-sitetables>
 
-.. |release| image:: https://img.shields.io/pypi/v/django-sitetables.svg
-    :target: https://pypi.python.org/pypi/django-sitetables
+[![release](https://img.shields.io/pypi/v/django-sitetables.svg)](https://pypi.python.org/pypi/django-sitetables)
+[![lic](https://img.shields.io/pypi/l/django-sitetables.svg)](https://pypi.python.org/pypi/django-sitetables)
+[![coverage](https://img.shields.io/coveralls/idlesign/django-sitetables/master.svg)](https://coveralls.io/r/idlesign/django-sitetables)
 
-.. |lic| image:: https://img.shields.io/pypi/l/django-sitetables.svg
-    :target: https://pypi.python.org/pypi/django-sitetables
-
-.. |coverage| image:: https://img.shields.io/coveralls/idlesign/django-sitetables/master.svg
-    :target: https://coveralls.io/r/idlesign/django-sitetables
-
-
-Description
------------
+## Description
 
 *Reusable application for Django featuring DataTables integration*
 
@@ -23,59 +14,53 @@ Description
 
 * Various data sources support: models, query sets, list of dicts.
 * Serverside tables support.
-* ``DataTables`` plugins support: styling, internationalization, etc.
+* `DataTables` plugins support: styling, internationalization, etc.
 * Template tags for easy js and css inclusion.
 * Template tags for DOM-based tables.
 
+## How to use
 
-How to use
-----------
+First place table definition into `views.py`:
 
-First place table definition into ``views.py``:
+```python
+from django.shortcuts import render
+from sitetables.toolbox import Table
 
-.. code-block:: python
-
-    from django.shortcuts import render
-    from sitetables.toolbox import Table
-
-    from .models import Entries
+from .models import Entries
 
 
-    def entries(request):
-        # We create table from entries queryset,
-        table_entries = Table(Entries.objects.filter(hidden=False))
-        return render(request, 'entries.html', {'table_entries': table_entries})
+def entries(request):
+    # We create table from entries queryset,
+    table_entries = Table(Entries.objects.filter(hidden=False))
+    return render(request, 'entries.html', {'table_entries': table_entries})
+```
 
+Next create page template `entries.html`:
 
-Next create page template ``entries.html``:
+```html
+{% load sitetables %}
 
-.. code-block:: html
+<!-- The following line usually goes into head tag. It'll load all needed css. -->
+{% sitetables_css table_entries %}
 
-    {% load sitetables %}
+<!-- The following resides in body tag. Note that in this scenario
+     thead and tbody will be populated using JS automatically. -->
+<table id="table-entries"></table>
 
-    <!-- The following line usually goes into head tag. It'll load all needed css. -->
-    {% sitetables_css table_entries %}
+<script type="text/javascript">
+     $(function() {
+         <!-- Initialize table using generated config. -->
+         $('#table-entries').dataTable({% sitetable_config table_entries %});
+     });
+ </script>
 
-    <!-- The following resides in body tag. Note that in this scenario
-         thead and tbody will be populated using JS automatically. -->
-    <table id="table-entries"></table>
-
-    <script type="text/javascript">
-         $(function() {
-             <!-- Initialize table using generated config. -->
-             $('#table-entries').dataTable({% sitetable_config table_entries %});
-         });
-     </script>
-
-    <!-- The following line usually goes somewhere near the end of the body.
-         It'll load all needed js. -->
-    {% sitetables_js table_entries %}
-
+<!-- The following line usually goes somewhere near the end of the body.
+     It'll load all needed js. -->
+{% sitetables_js table_entries %}
+```
 
 Done. *More information is available in the documentation.*
 
+## Documentation
 
-Documentation
--------------
-
-http://django-sitetables.readthedocs.org/
+<https://django-sitetables.readthedocs.io/>

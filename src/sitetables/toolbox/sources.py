@@ -1,7 +1,6 @@
 import re
-from collections import namedtuple
 from itertools import chain
-from typing import Optional, List, Union, Dict, Type, Tuple
+from typing import List, Union, Dict, Type, Tuple, NamedTuple
 
 from django.db.models import QuerySet, Model
 from django.http import HttpRequest, JsonResponse
@@ -19,12 +18,11 @@ TypeFilteredItems = Union[QuerySet, List]
 TypeServerItems = Tuple[int, int, TypeFilteredItems]
 TypePreparedItems = List[Dict[str, str]]
 
-TableItemsFilter = namedtuple('TableItemsFilter', [
-    'start',
-    'length',
-    'search',
-    'order',
-])
+class TableItemsFilter(NamedTuple):
+    start: int
+    length: int
+    search: str
+    order: list
 
 
 class TableSource:
@@ -36,7 +34,7 @@ class TableSource:
     _url_responder = None
     _RE_COLUMN_DEF = re.compile(r'\[(\d+)\]\[([a-z]+)\]')
 
-    def __init__(self, source, options: Optional[dict] = None):
+    def __init__(self, source, options: dict | None = None):
         self.columns = {}
         self._columns_by_idx = {}
         self.row_id = 'DT_RowId'
@@ -166,7 +164,7 @@ class TableSource:
         """The place for a source-specific bootstrap."""
         columns = self._get_columns()
         self.columns = columns
-        self._columns_by_idx = {idx: column for idx, column in enumerate(columns)}
+        self._columns_by_idx = dict(enumerate(columns))
 
     def contribute_to_config(self, config: dict, table: 'Table'):
         """Updates table configuration dictionary with source-specific params.
