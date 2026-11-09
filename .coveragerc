@@ -1,4 +1,0 @@
-[run]
-include = sitetables/*
-omit = sitetables/migrations/*, sitetables/tests/*
-
